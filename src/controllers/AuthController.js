@@ -4,7 +4,7 @@ const generateToken = require('../lib/utils')
 
 
 class AuthController {
-    async signup(req, res){
+    async signup(req, res){     
    
     const {username, email, password} = req.body;
         try {

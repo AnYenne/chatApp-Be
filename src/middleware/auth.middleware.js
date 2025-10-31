@@ -1,9 +1,9 @@
 const jwt = require('jsonwebtoken');
 const User = require('../models/user.model')
 
-const authMiddleware = async (req, res, next) => {
+const  authMiddleware = async (req, res, next) => {
    try {
-       const token =  req.cookies.jwt;
+        const token =  req.cookies.jwt;
         if(!token){
             return res.status(401).json({message:'unauthorized - no token provided'});
         }
