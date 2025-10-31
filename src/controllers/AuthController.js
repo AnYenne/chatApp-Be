@@ -81,7 +81,7 @@ class AuthController {
 
     }
 
-    logout(req, res){
+    async logout(req, res){
         try {
             res.cookie('jwt','', {
                 maxAge: 0

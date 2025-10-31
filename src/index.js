@@ -3,6 +3,7 @@ const morgan = require('morgan');
 const cors = require('cors');
 const dotenv = require('dotenv');
 const bodyParser = require('body-parser');
+const cookieParser = require('cookie-parser');
 
 const connectDB = require('./lib/db');
 const router = require('./routers/index');
@@ -15,6 +16,7 @@ dotenv.config();
 app.use(cors());
 app.use(morgan('combined'));
 app.use(bodyParser.json());
+app.use(cookieParser())
 
 //connect DB
  connectDB();
