@@ -34,7 +34,13 @@ const PORT = process.env.PORT || 3000;
 
 // Xử lý kết nối Socket.IO
 io.on('connection', (socket) => {
-  console.log('User connected:', socket.id);
+  console.log('userconnected', socket.id)
+  socket.on('onchat', data => {
+    console.log(data)
+    io.emit('onchat', data)
+  })
+
+
 })
 
 //router
