@@ -1,4 +1,5 @@
 const User = require('../models/user.model');
+const Session = require('../models/session.model')
 const bcrypt = require( 'bcryptjs');
 const generateToken = require('../lib/utils')
 
@@ -35,12 +36,12 @@ class AuthController {
 
             if(newUser){
                 //generate jwt token and res
-                generateToken(newUser._id,res);
+                const accessToken = generateToken(newUser._id,res);
                 await newUser.save();
                 return res.status(201).json({
-                    _id: newUser._id,
-                    email: newUser.email,
+                    message:'login successfully',
                     username: newUser.username,
+                    accessToken,
                 })
             } else{
                 return res.status(404).json({message: 'unable create an account'});
@@ -66,11 +67,11 @@ class AuthController {
             if(!isPasswordCorrect){
                 return res.status(401).json({message: 'invalid username/password'})
             } else{
-                generateToken(user._id, res)
+                const accessToken = await generateToken(user._id, res)
+                
                 return res.status(200).json({
-                    username: user.username,
-                    email: user.email,
-                    imageUrl: user.imageUrl
+                    message:'login successfully',
+                    accessToken,
                 })
             }
             
@@ -83,10 +84,12 @@ class AuthController {
 
     async logout(req, res){
         try {
-            res.cookie('jwt','', {
-                maxAge: 0
-            })
-            res.status(200).json("logout successfully")
+            const token = req.cookies?.refreshToken
+            if(token){ 
+                const session = await Session.deleteOne({refreshToken: token})
+                res.clearCookie('refreshToken')
+            }
+            res.sendStatus(204)
         } catch (error) {
             console.log(error)
             res.status(500).json({message: 'server error'})            

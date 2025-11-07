@@ -14,7 +14,10 @@ const router = require('./routers/index');
 
 //config cors, morgan, bodyparse, dotenv
 dotenv.config();
-app.use(cors());
+app.use(cors({
+  origin: 'http://localhost:5173', // FE domain
+  credentials: true
+}));
 app.use(morgan('combined'));
 app.use(bodyParser.json());
 app.use(cookieParser())
