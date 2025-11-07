@@ -15,6 +15,10 @@ const  generateToken = async (userId, res) => {
     // accesstoken gửi cho client
         const refreshToken = crypto.randomBytes(64).toString('hex');
         // await Session.deleteOne({userId})
+        const oldRefreshToken = await Session.findOne({userId})
+        if(oldRefreshToken){
+            await Session.deleteOne({userId})
+        } 
         await Session.create({
             userId,
             refreshToken,
@@ -28,8 +32,6 @@ const  generateToken = async (userId, res) => {
             secure: process.env.NODE_ENV !== 'development'
         });
 
-
-        
     return accesstoken;
 }
 
