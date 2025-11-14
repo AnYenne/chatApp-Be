@@ -1,7 +1,7 @@
 const User = require('../models/user.model');
 const Session = require('../models/session.model')
 const bcrypt = require( 'bcryptjs');
-const generateToken = require('../lib/utils')
+const generateToken = require('../lib/utils');
 
 
 class AuthController {
@@ -68,7 +68,7 @@ class AuthController {
                 return res.status(401).json({message: 'invalid username/password'})
             } else{
                 const accessToken = await generateToken(user._id, res)
-                
+                    
                 return res.status(200).json({
                     message:'login successfully',
                     accessToken,
@@ -94,6 +94,30 @@ class AuthController {
             console.log(error)
             res.status(500).json({message: 'server error'})            
             
+        }
+    }
+    async refresh(req, res){
+        try {
+            //check refresh token từ cookie
+            const token = req.cookies?.refreshToken;
+            if(!token){
+              return  res.status(401).json({message: 'there is no token'})
+            }
+             //check refreshtoken có trong session đúng ko
+            const session = await Session.findOne({refreshToken: token})
+            if(!session){
+                return res.status(403).json({message: 'refresh token is invalid'})
+            }
+            // check session hết hạn chưa
+            if(session.expiresAt < new Date()){
+                return res.status(403).json({message: 'token is expired'})
+            }
+            const accessToken = await generateToken(session.userId,res);
+            // chưa hết hạn thì genter mới và trả về accesstoken
+            res.status(200).json({message: 'successfully refresh', accessToken})
+        } catch (error) {   
+            console.log(error)
+            res.status(500).json({message: 'server refresh token error'})       
         }
     }
     
