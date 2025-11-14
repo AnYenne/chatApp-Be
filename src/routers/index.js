@@ -7,7 +7,7 @@ const messageRouter = require('../routers/message.router')
 
 function router(app){
     
-    // app.use('/api/friends',friendRouter)
+    app.use('/api/friends',friendRouter)
     app.use('/api/users', userRouter );
     app.use('/api/conversations', conversationRouter);
     app.use('/api/messages', messageRouter);
