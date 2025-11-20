@@ -38,7 +38,7 @@ const  generateToken = async (userId, res) => {
 
 
 // update conversation
-export const updateConversationAfterCreateMessage = (conversation, message, sendId) => {
+ const updateConversationAfterCreateMessage = (conversation, message, sendId) => {
         conversation.set({
             seendBy: [],
             lastMessageAt: message.createdAt,
@@ -58,4 +58,4 @@ export const updateConversationAfterCreateMessage = (conversation, message, send
         })
 }
 
-module.exports = generateToken;
+module.exports = {generateToken, updateConversationAfterCreateMessage}

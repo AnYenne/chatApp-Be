@@ -8,11 +8,11 @@ class FriendController {
         try {
             const from = req.user._id
             // if the same person
-            if(from === to){
+            if(from.toString() === to.toString()){
                 return res.status(400).json({message: 'can not send a request for yourself'})
             }
             //check the user exist
-            const userExisted = await User.find({_id: to})
+            const userExisted = await User.findOne({_id: to})
             if(!userExisted){
                 return res.status(404).json({message: 'user is not existed'})
             }
@@ -47,7 +47,7 @@ class FriendController {
                 message
             })
 
-            return res.status(201).json({message: 'sent request successful', request})
+            return res.status(201).json({message: 'sent request successful'})
 
         } catch (error) {
             console.error('add friend error',error)

@@ -1,7 +1,7 @@
 const User = require('../models/user.model');
 const Session = require('../models/session.model')
 const bcrypt = require( 'bcryptjs');
-const generateToken = require('../lib/utils');
+const {generateToken} = require('../lib/utils');
 
 
 class AuthController {

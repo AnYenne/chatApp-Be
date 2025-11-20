@@ -1,21 +1,20 @@
 const Conversation = require('../models/conversation.model')
 const Friend = require('../models/friend.model')
 
-const pair = (a,b) => (a > b) ? [a, b] : [b, a];
+const pair = (a,b) => (a < b) ? [a, b] : [b, a];
 
-export const checkFriendShip = async (req, res) => {
+const checkFriendShip = async (req, res, next) => {
     try {
-        const {recipientId} = req.body?.recipientId ?? null;
-        const me = req.user._id.toString();
+        const recipientId = req.body?.recipientId ?? null;
+        const me = req.user._id;
         const memberIds = req.body?.memberIds ?? [];
         if(!recipientId && memberIds.length == 0){
             return res.status(400).json({message: 'need to provide reciptientId or memberIds'})
         }
 
         if(recipientId){
-            const [userA, userB] = pair(me, recipientId)
+            const [userA, userB] = pair(me.toString(), recipientId.toString())
             const friend = await Friend.findOne({userA, userB});
-
             if(!friend){
                 return res.status(403).json({message: 'you are not friend with them'})
             }
@@ -40,8 +39,7 @@ export const checkFriendShip = async (req, res) => {
     }
 
 }
-
-export const checkGroupMembership = async(req, res, next) => {
+const checkGroupMembership = async(req, res, next) => {
   try {
     const { conversationId } = req.body;
     const userId = req.user._id;
@@ -69,3 +67,5 @@ export const checkGroupMembership = async(req, res, next) => {
   }
 
 }
+
+module.exports = {checkFriendShip, checkGroupMembership}

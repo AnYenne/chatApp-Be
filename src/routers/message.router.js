@@ -4,8 +4,8 @@ const authMiddleware = require('../middleware/auth.middleware');
 const {checkFriendShip, checkGroupMembership} = require('../middleware/friend.middleware');
 const router = express.Router();
 
-router.post('/direct',checkFriendShip, messageController.sendDirectMessage)
-router.post('/group',checkGroupMembership, messageController.sendGroupMessage)
+router.post('/direct',authMiddleware,checkFriendShip, messageController.sendDirectMessage)
+router.post('/group',authMiddleware,checkGroupMembership, messageController.sendGroupMessage)
 
 
 module.exports = router;

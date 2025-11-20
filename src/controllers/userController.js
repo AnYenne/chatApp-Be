@@ -20,7 +20,12 @@ class UserController {
             if(!username){
                 return res.status(400).json({message: 'query is required'})
             }
-            const user = await User.findOne({username}).select('-password');
+            const user = await User.find({
+                $or:[
+                    {username: {$regex: username, $options: 'i'}},
+                    {bio: {$regex: username, $options: 'i'}},
+                ]
+        }).select('username avatarUrl bio');
             if(!user){
                 return res.status(401).json({message: 'username is invalid'})
             } 

@@ -31,10 +31,6 @@ const userSchema = new mongoose.Schema({
         type: Boolean,
         defaut: false,
     },
-    conversationId: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Conversation'
-    }],
     createdAt: {
         type: Date,
         default: Date.now
