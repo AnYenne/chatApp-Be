@@ -5,8 +5,8 @@ const {checkFriendShip, checkGroupMembership} = require('../middleware/friend.mi
 const router = express.Router();
 
 
-router.get('/:conversationId/message', conversationController.getMessage)
-router.get('/', conversationController.getConversations)
-router.post('/', checkFriendShip, conversationController.createConversation)
+router.get('/:conversationId/message',authMiddleware, conversationController.getMessage)
+router.get('/',authMiddleware, conversationController.getConversations)
+router.post('/', authMiddleware, checkFriendShip, conversationController.createConversation)
 
 module.exports = router

@@ -3,6 +3,7 @@ const userRouter = require('./user.route');
 const friendRouter = require('../routers/friend.router');
 const conversationRouter = require('../routers/conversation.router')
 const messageRouter = require('../routers/message.router')
+const authMiddleware = require('../middleware/auth.middleware')
 
 
 function router(app){

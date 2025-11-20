@@ -1,3 +1,4 @@
+const {mongoose} = require('mongoose')
 const Conversation = require('../models/conversation.model')
 const Message =  require('../models/message.model')
 
@@ -8,25 +9,25 @@ class ConversationController {
             const {conversationId} = req.params;
             const {limit = 50, cursor} = req.query;
 
-            const query = {conversationId};
+            const query = {conversationId: new mongoose.Types.ObjectId(conversationId) };
 
             if(cursor){
-                query.createAt = {$lt: new Date(cursor)};
+                query.createdAt = {$lt: new Date(cursor)};
             }
-            let message =  await Message.find(query)
+
+            let messages =  await Message.find(query)
                 .sort({createdAt: -1})
                 .limit(Number(limit) + 1)
 
                 let nextCursor = null;
                 
-                if(message.length > Number(limit)){
-                    const nextMessage = message[message.length -1];
-                    nextCursor =  nextMessage.createdAt.toISOString();
-                    message.pop() 
+                if(messages.length > Number(limit)){
+                    const nextMessages = messages[messages.length -1];
+                    nextCursor =  nextMessages.createdAt.toISOString();
+                    messages.pop() 
                 }
 
-                message = message.reverse()
-
+                // messages = messages.reverse()
             return res.status(200).json({ messages, nextCursor})
             
         } catch (error) {
@@ -48,7 +49,6 @@ class ConversationController {
                 conversation = await Conversation.findOne({
                     type: 'direct',
                     "participants.userId": {$all: [userId, participantId]},
-
                 })
                 if(!conversation){
                     conversation =  new conversation({
@@ -81,7 +81,7 @@ class ConversationController {
             await conversation.populate([
                 {path: 'participants.userId', select: 'username avatarUrl' },
                 {path: 'seenBy.userId', select: 'username avatarUrl' },
-                {path: 'lastMesssage.senderId', select: 'username avatarUrl' },
+                {path: 'lastMessage.senderId', select: 'username avatarUrl' },
             ])
             
             return res.status(200).json({ message: 'created a conversation', conversation})
@@ -95,11 +95,11 @@ class ConversationController {
     try {
         const userId = req.user._id
         const conversations =  await Conversation.find({
-            "participants.userid": userId,
+            "participants.userId": userId,
         })
         .sort({lastMessageAt: -1, updateAt:-1})
         .populate({
-            path:"participants.userid", select:"username avatarUrl"
+            path:"participants.userId", select:"username avatarUrl"
         })
         .populate({
             path:"lastMessage.senderId", select:"username avatarUrl"

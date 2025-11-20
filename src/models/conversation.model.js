@@ -46,24 +46,7 @@ const lastMessageSchema = new mongoose.Schema({
     _id: false
 })
 
-
-
-// group: {
-    //     name: { type: String },
-    //     createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }
-    // }, // đúng rồi nhưng để dễ đọc hơn thì tạo 1 schema phụ như trên và dùng như sau
-
-
-
-    // lastMessage: {
-    
-    // content: { type: String },
-    
-    // createdAt: { type: Date, default: Date.now },
-    // },
-
 const conversationSchema = new mongoose.Schema({
-
     type: {
         type: String,
         enum: ['direct', 'group'],
@@ -73,7 +56,6 @@ const conversationSchema = new mongoose.Schema({
         type: [participantSchema],
         required: true,
     },
-    
     group: {
         type:groupSchema
     },
